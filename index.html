@@ -2,9 +2,33 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>Hello World</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>나의 달력</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Hello World</h1>
+  <main class="calendar">
+    <header class="calendar-header">
+      <button id="prev" aria-label="이전 달">&lsaquo;</button>
+      <h1 id="title"></h1>
+      <button id="next" aria-label="다음 달">&rsaquo;</button>
+    </header>
+
+    <div class="weekdays">
+      <span class="sun">일</span>
+      <span>월</span>
+      <span>화</span>
+      <span>수</span>
+      <span>목</span>
+      <span>금</span>
+      <span class="sat">토</span>
+    </div>
+
+    <div id="days" class="days"></div>
+
+    <button id="today-btn" class="today-btn">오늘로</button>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>

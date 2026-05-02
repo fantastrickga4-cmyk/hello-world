@@ -35,3 +35,12 @@ export async function getUserFromRequest(req) {
   if (!auth || !auth.startsWith('Bearer ')) return null;
   return verifyToken(auth.slice(7));
 }
+
+export function isAdmin(username) {
+  if (!username) return false;
+  const list = (process.env.ADMIN_USERNAMES || '')
+    .split(',')
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+  return list.includes(username.toLowerCase());
+}

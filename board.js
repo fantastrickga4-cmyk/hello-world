@@ -6,11 +6,13 @@ const $ = (sel) => document.querySelector(sel);
 const state = {
   token: localStorage.getItem(TOKEN_KEY),
   username: localStorage.getItem(USER_KEY),
+  isAdmin: false,
 };
 
 function setAuth(token, username) {
   state.token = token;
   state.username = username;
+  if (!token) state.isAdmin = false;
   if (token) {
     localStorage.setItem(TOKEN_KEY, token);
     localStorage.setItem(USER_KEY, username);
@@ -30,6 +32,7 @@ function renderAuth() {
   if (state.token && state.username) {
     area.innerHTML = `
       <span class="username">${escapeHtml(state.username)}</span>
+      ${state.isAdmin ? `<a href="/admin.html">관리자</a>` : ''}
       <button id="logout-btn">로그아웃</button>
       <a href="/">달력</a>
     `;
@@ -158,6 +161,8 @@ function setupAuthForms() {
     }
     setAuth(data.token, data.username);
     e.target.reset();
+    await verifyExistingToken();
+    renderAuth();
     await loadPosts();
   });
 
@@ -181,6 +186,8 @@ function setupAuthForms() {
     }
     setAuth(data.token, data.username);
     e.target.reset();
+    await verifyExistingToken();
+    renderAuth();
     await loadPosts();
   });
 }
@@ -233,7 +240,10 @@ async function verifyExistingToken() {
   });
   if (!res.ok) {
     setAuth(null, null);
+    return;
   }
+  const me = await res.json();
+  state.isAdmin = !!me.isAdmin;
 }
 
 async function main() {

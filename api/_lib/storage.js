@@ -85,3 +85,32 @@ export async function deletePost(id) {
   await del(match.url);
   return true;
 }
+
+export async function listUsers() {
+  const blobs = await list({ prefix: USER_PREFIX });
+  const items = await Promise.all(blobs.blobs.map((b) => fetchJson(b.url)));
+  return items
+    .filter(Boolean)
+    .map(({ username, createdAt }) => ({ username, createdAt }))
+    .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+}
+
+export async function deleteUser(username) {
+  const key = userKey(username);
+  const blobs = await list({ prefix: key, limit: 1 });
+  const match = blobs.blobs.find((b) => b.pathname === key);
+  if (!match) return false;
+  await del(match.url);
+  return true;
+}
+
+export async function deletePostsByAuthor(username) {
+  const blobs = await list({ prefix: POST_PREFIX });
+  const targets = [];
+  for (const b of blobs.blobs) {
+    const post = await fetchJson(b.url);
+    if (post && post.author === username) targets.push(b.url);
+  }
+  if (targets.length) await del(targets);
+  return targets.length;
+}

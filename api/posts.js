@@ -1,4 +1,4 @@
-import { getUserFromRequest } from './_lib/auth.js';
+import { getUserFromRequest, isAdmin } from './_lib/auth.js';
 import { listPosts, createPost, getPost, deletePost } from './_lib/storage.js';
 import { readJsonBody, json } from './_lib/respond.js';
 
@@ -42,7 +42,7 @@ export default async function handler(req, res) {
 
     const post = await getPost(id);
     if (!post) return json(res, 404, { error: '게시글을 찾을 수 없습니다.' });
-    if (post.author !== username) {
+    if (post.author !== username && !isAdmin(username)) {
       return json(res, 403, { error: '본인 글만 삭제할 수 있습니다.' });
     }
 

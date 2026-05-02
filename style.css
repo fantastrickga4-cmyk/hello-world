@@ -6,7 +6,7 @@
 
 body {
   font-family: "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-  background: linear-gradient(135deg, #6dd5ed, #2193b0);
+  background: red;
   min-height: 100vh;
   display: flex;
   align-items: center;

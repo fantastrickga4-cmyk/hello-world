@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Snake" />
+  <meta name="theme-color" content="#0a0e1f" />
+  <title>SNAKE :: SECURE TERMINAL</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="matrix-rain"></canvas>
+
+  <div class="rotate-notice" aria-hidden="true">
+    <div class="rotate-icon">▣</div>
+    <div class="rotate-text">[ROTATE TO PORTRAIT]</div>
+    <div class="rotate-sub">PORTRAIT MODE REQUIRED</div>
+  </div>
+
+  <div class="phone">
+    <div id="timer-bar" class="timer-bar hidden" aria-live="polite">
+      <span class="timer-icon">◢</span>
+      <span class="timer-label">T-MINUS</span>
+      <span class="timer-text" id="timer-text">01:40:00</span>
+    </div>
+
+    <div id="progress-bar" class="progress-bar hidden" aria-live="polite">
+      <span class="progress-icon">◆</span>
+      <span class="progress-label">SYNC</span>
+      <span class="progress-text" id="progress-text">0%</span>
+    </div>
+
+    <header class="msg-header">
+      <button class="back-btn" aria-label="back" title="목록으로">‹</button>
+      <div class="contact">
+        <div class="avatar" aria-hidden="true">HQ</div>
+        <div class="contact-info">
+          <strong id="contact-name">SNAKE</strong>
+          <span class="contact-status">
+            <span class="online-dot"></span>
+            <span id="contact-status-text">[ENCRYPTED :: ACTIVE]</span>
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <div class="chat-wrapper">
+      <main class="chat-area" id="chat-area">
+        <div class="chat-empty" id="chat-empty">
+          <div class="snake-icon" aria-hidden="true">
+            <svg viewBox="-60 -60 120 120" xmlns="http://www.w3.org/2000/svg">
+              <!-- 외곽 룬 링 (역방향 천천히 회전) -->
+              <g class="aura-ring">
+                <circle cx="0" cy="0" r="55" fill="none" stroke="currentColor"
+                        stroke-width="0.4" stroke-dasharray="0.6 4" opacity="0.45"/>
+                <circle cx="0" cy="0" r="49" fill="none" stroke="currentColor"
+                        stroke-width="0.3" opacity="0.18"/>
+              </g>
+              <!-- 우로보로스 (느린 회전) -->
+              <g class="ouroboros">
+                <!-- 두꺼운 뱀 몸체 (위쪽 갭에서 머리가 꼬리를 뭄) -->
+                <path d="M 7 -37 A 38 38 0 1 1 -7 -37"
+                      fill="none" stroke="currentColor" stroke-width="8"
+                      stroke-linecap="round"/>
+                <!-- 비늘 패턴 (어두운 점선) -->
+                <path d="M 7 -37 A 38 38 0 1 1 -7 -37"
+                      fill="none" stroke="#001a07" stroke-width="2.2"
+                      stroke-dasharray="1 4.5" opacity="0.55"/>
+                <!-- 뱀 머리: 둥근 코브라 헤드 + 뾰족한 코 + 눈 -->
+                <g class="snake-head">
+                  <!-- 코브라 hood (머리 본체, 둥근 부분) -->
+                  <ellipse cx="7" cy="-37" rx="11" ry="9" fill="currentColor"/>
+                  <!-- 뾰족한 코/주둥이 (꼬리를 향해 왼쪽으로) -->
+                  <path d="M 0 -41 L -13 -37 L 0 -33 Z" fill="currentColor"/>
+                  <!-- 입 (꼬리를 무는 어두운 틈) -->
+                  <path d="M -4 -39 Q -10 -37, -4 -35 Z" fill="#001a07" opacity="0.6"/>
+                  <!-- 눈 (검은 동공) -->
+                  <circle cx="5" cy="-39.5" r="2" fill="#001a07"/>
+                  <!-- 눈 광채 (신비) -->
+                  <circle cx="5" cy="-39.5" r="0.7" fill="#bcffce" opacity="0.9"/>
+                  <!-- 미간 표시 (코브라 특유의 검은 V자) -->
+                  <path d="M 9 -42 L 11 -39 L 13 -42"
+                        fill="none" stroke="#001a07" stroke-width="0.7" opacity="0.6"/>
+                </g>
+                <!-- 꼬리 끝 (입 안에 보이는 가는 끝) -->
+                <circle cx="-7" cy="-37" r="2.5" fill="currentColor"/>
+              </g>
+              <!-- 중심 전능안 (천천히 맥동) -->
+              <g class="inner-eye">
+                <ellipse cx="0" cy="0" rx="15" ry="7.5" fill="none"
+                         stroke="currentColor" stroke-width="1.1"/>
+                <circle cx="0" cy="0" r="5" fill="currentColor"/>
+                <circle cx="0" cy="0" r="1.4" fill="#001a07"/>
+              </g>
+            </svg>
+          </div>
+          <p>[ END-TO-END ENCRYPTED ]</p>
+          <p class="muted">&gt; AWAITING ACCESS CODE...</p>
+        </div>
+      </main>
+
+      <div id="ep-clear-overlay" class="ep-clear-overlay hidden" aria-live="polite">
+        <div class="ep-clear-content">
+          <div class="ep-clear-symbol">◈</div>
+          <div class="ep-clear-ep">[ EPISODE 01 ]</div>
+          <div class="ep-clear-title">MISSION CLEAR</div>
+          <div class="ep-clear-sub">&gt; SYSTEM PURGED &middot; SEE YOU NEXT EP</div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="composer">
+      <form id="code-form" class="code-form">
+        <button type="button" class="hint-btn" id="hint-btn" title="힌트">힌트</button>
+        <button type="button" class="hint-btn memo-btn" id="memo-btn" title="메모">메모</button>
+        <span class="prompt-prefix" aria-hidden="true">&gt;</span>
+        <input type="text" id="code-input" autocomplete="off" autocapitalize="off"
+               spellcheck="false" autofocus
+               placeholder="ENTER CODE_" />
+        <button type="submit" class="send-btn" aria-label="send" title="전송">▶</button>
+      </form>
+      <p id="error-msg" class="error-msg"></p>
+    </footer>
+  </div>
+
+  <!-- 이미지 확대 오버레이 — body 레벨에 두어야 스캔라인 위로 뜸 -->
+  <div id="image-overlay" class="image-overlay hidden" aria-hidden="true">
+    <img id="image-overlay-img" src="" alt="" />
+  </div>
+
+  <!-- 힌트 팝업 -->
+  <div id="hint-modal" class="hint-modal hidden" role="dialog" aria-labelledby="hint-modal-title">
+    <div class="hint-card">
+      <div class="hint-icon" aria-hidden="true">◉</div>
+      <h3 id="hint-modal-title">[ HINT ACCESS ]</h3>
+      <p class="hint-sub">&gt; 힌트 코드를 입력하세요.</p>
+      <div class="hint-count-display">
+        <span class="hint-count-label">USED</span>
+        <span class="hint-count-num" id="hint-count-num">0</span>
+        <span class="hint-count-unit">회</span>
+      </div>
+      <form id="hint-form" class="hint-form">
+        <input type="text" id="hint-input" placeholder="PE001" autocomplete="off"
+               autocapitalize="off" spellcheck="false" />
+        <button type="submit" class="hint-submit">EXECUTE</button>
+      </form>
+      <div id="hint-result" class="hint-result hidden">
+        <div class="hint-result-label">&gt; HINT</div>
+        <p id="hint-text"></p>
+        <div id="hint-answer-wrap" class="hint-answer-wrap hidden">
+          <button type="button" id="hint-answer-toggle" class="hint-answer-toggle">&gt; REVEAL ANSWER</button>
+          <div id="hint-answer-box" class="hint-answer-box hidden">
+            <div class="hint-result-label hint-answer-label">&gt; ANSWER</div>
+            <p id="hint-answer-text"></p>
+          </div>
+        </div>
+      </div>
+      <button type="button" id="hint-close" class="hint-close">CLOSE</button>
+    </div>
+  </div>
+
+  <!-- 메모 (낙서) 팝업 -->
+  <div id="memo-modal" class="memo-modal hidden" role="dialog" aria-labelledby="memo-modal-title">
+    <div class="memo-frame">
+      <div class="memo-header">
+        <h3 id="memo-modal-title">[ MEMO PAD ]</h3>
+        <button type="button" id="memo-close" class="memo-close-btn" aria-label="close">✕</button>
+      </div>
+      <div class="memo-toolbar">
+        <button type="button" class="memo-tool active" data-tool="pen" id="memo-tool-pen">PEN</button>
+        <button type="button" class="memo-tool" data-tool="eraser" id="memo-tool-eraser">ERASE</button>
+        <span class="memo-divider" aria-hidden="true"></span>
+        <span class="memo-colors" role="group" aria-label="pen colors">
+          <button type="button" class="memo-color active" data-color="#00ff52"
+                  style="background:#00ff52" aria-label="green"></button>
+          <button type="button" class="memo-color" data-color="#ffcb24"
+                  style="background:#ffcb24" aria-label="amber"></button>
+          <button type="button" class="memo-color" data-color="#ff2a4d"
+                  style="background:#ff2a4d" aria-label="red"></button>
+          <button type="button" class="memo-color" data-color="#ffffff"
+                  style="background:#ffffff" aria-label="white"></button>
+        </span>
+        <span class="memo-divider" aria-hidden="true"></span>
+        <button type="button" id="memo-clear" class="memo-clear-btn">CLEAR</button>
+      </div>
+      <div class="memo-canvas-wrap">
+        <canvas id="memo-canvas" class="memo-canvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- 경고 팝업 (커스텀) -->
+  <div id="alert-modal" class="alert-modal hidden" role="alertdialog" aria-labelledby="alert-message">
+    <div class="alert-card">
+      <div class="alert-icon" aria-hidden="true">⚠</div>
+      <div class="alert-message" id="alert-message"></div>
+      <button type="button" class="alert-confirm" id="alert-confirm">CONFIRM</button>
+    </div>
+  </div>
+
+  <button id="admin-trigger" aria-label="reset" title="3초 길게 누르면 모두 초기화"></button>
+
+  <script src="scenario.js"></script>
+  <script src="timer.js"></script>
+  <script src="matrix-rain.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // PWA service worker 등록 (file://에서는 동작 안 하므로 https/localhost에서만)
+    if ("serviceWorker" in navigator
+        && (location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1")) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js").catch((err) => {
+          console.warn("[pwa] sw register failed:", err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>

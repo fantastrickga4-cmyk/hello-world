@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#003a18"/>
+      <stop offset="60%" stop-color="#000a05"/>
+      <stop offset="100%" stop-color="#000"/>
+    </radialGradient>
+    <linearGradient id="phos" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7cffa0"/>
+      <stop offset="50%" stop-color="#00ff52"/>
+      <stop offset="100%" stop-color="#00b53a"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  <g opacity="0.18">
+    <line x1="0" y1="60"  x2="512" y2="60"  stroke="#00ff52" stroke-width="0.6"/>
+    <line x1="0" y1="124" x2="512" y2="124" stroke="#00ff52" stroke-width="0.6"/>
+    <line x1="0" y1="188" x2="512" y2="188" stroke="#00ff52" stroke-width="0.6"/>
+    <line x1="0" y1="252" x2="512" y2="252" stroke="#00ff52" stroke-width="0.6"/>
+    <line x1="0" y1="316" x2="512" y2="316" stroke="#00ff52" stroke-width="0.6"/>
+    <line x1="0" y1="380" x2="512" y2="380" stroke="#00ff52" stroke-width="0.6"/>
+    <line x1="0" y1="444" x2="512" y2="444" stroke="#00ff52" stroke-width="0.6"/>
+  </g>
+  <rect x="64" y="64" width="384" height="384" rx="12"
+        fill="none" stroke="#00ff52" stroke-width="3" opacity="0.6"
+        filter="url(#glow)"/>
+  <text x="256" y="328" font-family="Courier New, monospace"
+        font-size="240" font-weight="900" fill="url(#phos)" text-anchor="middle"
+        letter-spacing="-2" filter="url(#glow)">S</text>
+  <text x="256" y="406" font-family="Courier New, monospace"
+        font-size="32" font-weight="700" fill="#00ff52" text-anchor="middle"
+        letter-spacing="14" opacity="0.85">SNAKE</text>
+  <g stroke="#00ff52" stroke-width="3" fill="none" opacity="0.7">
+    <path d="M 76 76 L 76 110 M 76 76 L 110 76"/>
+    <path d="M 436 76 L 436 110 M 436 76 L 402 76"/>
+    <path d="M 76 436 L 76 402 M 76 436 L 110 436"/>
+    <path d="M 436 436 L 436 402 M 436 436 L 402 436"/>
+  </g>
+</svg>

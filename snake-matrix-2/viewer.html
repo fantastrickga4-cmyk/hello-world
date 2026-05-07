@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SNAKE :: OPERATOR VIEW</title>
+<style>
+  :root {
+    --accent: #ff2a4d;
+    --accent-dim: #b81e3f;
+    --accent-glow: rgba(255, 42, 77, 0.45);
+    --bg: #02060b;
+    --panel: rgba(32, 0, 8, 0.85);
+    --text: #ffd0d8;
+    --error: #ff8800;
+    --warn: #ffcb24;
+    --muted: rgba(255, 42, 77, 0.35);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Courier New", "D2Coding", monospace;
+    background-image: radial-gradient(ellipse at top, rgba(60, 0, 14, 0.18), transparent 70%);
+    padding: 18px 22px 30px;
+    min-height: 100vh;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed rgba(255, 42, 77, 0.2);
+  }
+  h1 {
+    color: var(--accent);
+    text-shadow: 0 0 14px var(--accent);
+    font-size: 22px;
+    letter-spacing: 0.22em;
+  }
+  .status {
+    display: flex; align-items: center; gap: 16px;
+    font-size: 12px; letter-spacing: 0.16em;
+  }
+  .status-pill {
+    border: 1px solid var(--accent);
+    padding: 6px 12px;
+    color: var(--accent);
+    text-shadow: 0 0 6px var(--accent);
+  }
+  .status-pill.disconnected { border-color: var(--error); color: var(--error); text-shadow: 0 0 6px var(--error); }
+  .status-pill.stale { border-color: var(--warn); color: var(--warn); text-shadow: 0 0 6px var(--warn); }
+  .last-sync { color: var(--accent-dim); }
+
+  .grid-top {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr 0.85fr;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  @media (max-width: 1100px) {
+    .grid-top { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .grid-top { grid-template-columns: 1fr; }
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--accent-dim);
+    border-left: 3px solid var(--accent);
+    padding: 18px 22px;
+    box-shadow: 0 0 18px rgba(255, 42, 77, 0.08);
+    position: relative;
+  }
+  .panel h2 {
+    color: var(--accent);
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    margin-bottom: 14px;
+    opacity: 0.95;
+  }
+  .panel h2 small { font-weight: 400; opacity: 0.5; margin-left: 8px; letter-spacing: 0.1em; }
+
+  /* 타이머 패널 */
+  #timer-text {
+    font-size: 64px;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    text-shadow: 0 0 14px var(--accent);
+    line-height: 1;
+  }
+  #timer-text.warn  { color: var(--warn);  text-shadow: 0 0 14px var(--warn); }
+  #timer-text.alert { color: var(--error); text-shadow: 0 0 14px var(--error); }
+  #timer-text.frozen::after {
+    content: " [FROZEN]";
+    font-size: 14px;
+    margin-left: 10px;
+    letter-spacing: 0.18em;
+    color: var(--warn);
+    vertical-align: middle;
+  }
+  #timer-state {
+    margin-top: 10px;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--accent-dim);
+  }
+  /* 타이머 편집 (운영자 override) */
+  .timer-edit-row {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .timer-edit-btn {
+    background: transparent;
+    border: 1px solid var(--accent-dim);
+    color: var(--accent);
+    padding: 6px 14px;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    cursor: pointer;
+    text-shadow: 0 0 4px var(--accent);
+    font-weight: 700;
+  }
+  .timer-edit-btn:hover {
+    background: rgba(255, 42, 77, 0.12);
+    border-color: var(--accent);
+    box-shadow: 0 0 8px var(--accent-glow);
+  }
+  .timer-edit-btn.hidden { display: none; }
+  .timer-edit-form {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .timer-edit-form.hidden { display: none; }
+  .timer-edit-form input {
+    width: 90px;
+    background: rgba(32, 0, 8, 0.7);
+    border: 1px solid var(--accent-dim);
+    color: var(--accent);
+    padding: 7px 10px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    outline: none;
+    text-align: center;
+  }
+  .timer-edit-form input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 6px var(--accent-glow);
+  }
+  .timer-edit-form .timer-min-suffix {
+    font-size: 11px;
+    color: var(--accent-dim);
+    letter-spacing: 0.16em;
+    margin-right: 4px;
+  }
+  .timer-apply-btn,
+  .timer-cancel-btn {
+    background: transparent;
+    border: 1px solid var(--accent-dim);
+    color: var(--accent);
+    padding: 7px 12px;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  .timer-apply-btn {
+    color: var(--warn);
+    border-color: rgba(255, 203, 36, 0.45);
+    text-shadow: 0 0 4px rgba(255, 203, 36, 0.5);
+  }
+  .timer-apply-btn:hover {
+    background: rgba(255, 203, 36, 0.1);
+    border-color: var(--warn);
+    box-shadow: 0 0 8px rgba(255, 203, 36, 0.4);
+  }
+  .timer-cancel-btn:hover { background: rgba(255, 42, 77, 0.08); }
+  .timer-edit-status {
+    margin-top: 8px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--warn);
+    text-shadow: 0 0 4px rgba(255, 203, 36, 0.4);
+    min-height: 14px;
+  }
+  .timer-edit-status.error { color: var(--error); text-shadow: 0 0 4px rgba(255, 42, 77, 0.4); }
+
+  /* 진행률 패널 */
+  #progress-text {
+    font-size: 56px;
+    font-weight: 900;
+    color: var(--accent);
+    text-shadow: 0 0 12px var(--accent);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  #progress-text.done { color: var(--warn); text-shadow: 0 0 14px var(--warn); }
+  .progress-bar-track {
+    margin-top: 14px;
+    height: 12px;
+    background: rgba(255, 42, 77, 0.1);
+    border: 1px solid var(--accent-dim);
+    overflow: hidden;
+    position: relative;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-dim), var(--accent));
+    box-shadow: 0 0 12px var(--accent);
+    transition: width 0.4s ease;
+  }
+  .progress-bar-fill.done { background: linear-gradient(90deg, #cc9800, var(--warn)); box-shadow: 0 0 12px var(--warn); }
+
+  /* 마지막 입력 */
+  #last-code {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--accent);
+    text-shadow: 0 0 10px var(--accent);
+    word-break: break-all;
+    min-height: 44px;
+    line-height: 1.1;
+  }
+  #last-code.empty { color: var(--muted); font-size: 20px; text-shadow: none; font-weight: 400; }
+  #last-code-time {
+    margin-top: 8px;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--accent-dim);
+  }
+
+  /* 힌트 사용 횟수 */
+  #hint-count {
+    font-size: 56px;
+    font-weight: 900;
+    color: var(--accent);
+    text-shadow: 0 0 12px var(--accent);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  #hint-count.warn { color: var(--warn); text-shadow: 0 0 12px var(--warn); }
+  #hint-count.alert { color: var(--error); text-shadow: 0 0 12px var(--error); }
+  #hint-count .hint-count-unit {
+    font-size: 18px;
+    color: var(--accent-dim);
+    letter-spacing: 0.12em;
+    font-weight: 700;
+  }
+  #hint-count-status {
+    margin-top: 10px;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--accent-dim);
+  }
+
+  /* 잘못된 입력 패널 (4번째 칸 — 작은 사이즈로 변경) */
+  .panel h2 { display: flex; justify-content: space-between; align-items: baseline; }
+  .msg-count {
+    font-size: 11px;
+    color: var(--accent-dim);
+    letter-spacing: 0.14em;
+  }
+  #msg-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  #msg-list li {
+    padding: 8px 10px;
+    border-left: 2px solid #ff7799;
+    background: rgba(255, 119, 153, 0.06);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  .msg-time {
+    color: var(--accent-dim);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .msg-body {
+    color: #ffe0e8;
+    word-break: break-all;
+    font-size: 12px;
+    line-height: 1.4;
+    /* 한 줄로만 표시 — 넘치면 ... */
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .empty-msg {
+    color: var(--muted);
+    font-size: 12px;
+    padding: 12px 8px;
+    text-align: center;
+    letter-spacing: 0.1em;
+    border-left: 2px solid transparent !important;
+    background: transparent !important;
+  }
+
+  /* 힌트 사용 패널 (전체 너비) */
+  .hint-panel { padding: 22px 28px 24px; }
+  .hint-panel h2 { display: flex; justify-content: space-between; align-items: baseline; }
+  #hint-count-status {
+    font-size: 11px;
+    color: var(--accent-dim);
+    letter-spacing: 0.16em;
+  }
+  footer {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 10px;
+    color: var(--accent-dim);
+    letter-spacing: 0.18em;
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>[ SNAKE :: OPERATOR VIEW ]</h1>
+  <div class="status">
+    <span class="status-pill" id="status">[CONNECTING]</span>
+    <span class="last-sync">LAST: <span id="last-sync">--</span></span>
+  </div>
+</header>
+
+<div class="grid-top">
+  <section class="panel">
+    <h2>T-MINUS <small>남은 시간</small></h2>
+    <div id="timer-text">--:--:--</div>
+    <div id="timer-state">대기 중</div>
+    <div class="timer-edit-row">
+      <button type="button" id="timer-edit-btn" class="timer-edit-btn">[ EDIT TIMER ]</button>
+      <form id="timer-edit-form" class="timer-edit-form hidden">
+        <input type="number" id="timer-minutes-input" min="0" max="1440" step="1" placeholder="분" inputmode="numeric" />
+        <span class="timer-min-suffix">MIN</span>
+        <button type="submit" class="timer-apply-btn">APPLY</button>
+        <button type="button" id="timer-cancel-btn" class="timer-cancel-btn">CANCEL</button>
+      </form>
+    </div>
+    <div id="timer-edit-status" class="timer-edit-status"></div>
+  </section>
+  <section class="panel">
+    <h2>SYNC <small>진행률</small></h2>
+    <div id="progress-text">0%</div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progress-fill" style="width: 0%"></div>
+    </div>
+  </section>
+  <section class="panel">
+    <h2>LAST INPUT <small>최근 입력 코드</small></h2>
+    <div id="last-code" class="empty">— 입력 없음 —</div>
+    <div id="last-code-time"></div>
+  </section>
+  <section class="panel">
+    <h2>
+      <span>REPLY <small>마지막 응답</small></span>
+      <span class="msg-count" id="msg-count">0건</span>
+    </h2>
+    <ul id="msg-list">
+      <li class="empty-msg">> 응답 없음</li>
+    </ul>
+  </section>
+</div>
+
+<section class="panel hint-panel">
+  <h2>
+    <span>HINT USED <small>힌트 사용 횟수</small></span>
+    <span id="hint-count-status">아직 미사용</span>
+  </h2>
+  <div id="hint-count">0<span class="hint-count-unit">회</span></div>
+</section>
+
+<footer>
+  > AUTO-REFRESH EVERY 2 SECONDS &middot; READ-ONLY DASHBOARD
+</footer>
+
+<script src="viewer.js"></script>
+</body>
+</html>

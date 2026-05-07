@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SF SOUND SAMPLES</title>
+<style>
+  :root {
+    --accent: #00ff52;
+    --accent-dim: #00b53a;
+    --bg: #02060b;
+    --text: #b6ffc7;
+    --panel: rgba(0, 16, 8, 0.85);
+    --error: #ff2a4d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Courier New", "D2Coding", monospace;
+    padding: 24px 16px 80px;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at top, rgba(0, 60, 20, 0.15), transparent 70%);
+  }
+  h1 {
+    color: var(--accent);
+    text-shadow: 0 0 14px var(--accent);
+    font-size: 22px;
+    letter-spacing: 0.2em;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+  .sub {
+    color: var(--accent-dim);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .group {
+    background: var(--panel);
+    border: 1px solid var(--accent-dim);
+    border-left: 3px solid var(--accent);
+    margin: 0 auto 18px;
+    max-width: 720px;
+    padding: 18px 20px 20px;
+    box-shadow: 0 0 18px rgba(0, 255, 82, 0.08);
+  }
+  .group h2 {
+    color: var(--accent);
+    font-size: 14px;
+    letter-spacing: 0.22em;
+    margin-bottom: 14px;
+    text-shadow: 0 0 8px var(--accent);
+  }
+  .group h2 small {
+    color: var(--accent-dim);
+    font-size: 11px;
+    margin-left: 10px;
+    letter-spacing: 0.12em;
+    font-weight: 400;
+  }
+  .item {
+    display: grid;
+    grid-template-columns: 90px 1fr auto;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(0, 255, 82, 0.15);
+  }
+  .item:last-child { border-bottom: 0; }
+  .label {
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+  .desc {
+    color: var(--text);
+    font-size: 12px;
+    opacity: 0.85;
+    line-height: 1.4;
+  }
+  audio {
+    height: 36px;
+    filter: hue-rotate(70deg) saturate(1.2);
+  }
+  .play-btn {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 8px 14px;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    letter-spacing: 0.15em;
+    text-shadow: 0 0 6px var(--accent);
+    transition: all 0.15s;
+  }
+  .play-btn:hover {
+    background: rgba(0, 255, 82, 0.15);
+    box-shadow: 0 0 10px rgba(0, 255, 82, 0.4);
+  }
+  .play-btn:active { transform: scale(0.96); }
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 11px;
+    color: var(--accent-dim);
+    letter-spacing: 0.16em;
+    opacity: 0.7;
+  }
+  .controls {
+    text-align: center;
+    margin: 0 auto 26px;
+    max-width: 720px;
+  }
+  .vol-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--panel);
+    border: 1px solid var(--accent-dim);
+    padding: 8px 16px;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+  }
+  .vol-wrap input[type=range] {
+    accent-color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<h1>[ SF SOUND SAMPLES ]</h1>
+<p class="sub">> CLICK TO PLAY EACH VARIANT &middot; PICK YOUR FAVORITES</p>
+
+<div class="controls">
+  <div class="vol-wrap">
+    VOLUME
+    <input type="range" id="vol" min="0" max="1" step="0.05" value="0.7">
+    <span id="volv">70%</span>
+  </div>
+</div>
+
+<div class="group">
+  <h2>SEND <small>코드 입력 시 &middot; 10가지 변형</small></h2>
+  <div class="item">
+    <span class="label">01 &middot; LASER</span>
+    <span class="desc">레이저 zap — 사각파 2.5kHz→200Hz 빠른 하강 + 밴드패스 + sub 착지</span>
+    <button class="play-btn" data-file="send-01-laser.wav">▶ PLAY</button>
+  </div>
+  <div class="item">
+    <span class="label">02 &middot; BLIP</span>
+    <span class="desc">깨끗한 디지털 사인 1.2kHz + 매우 긴 잔향 (Tron 톤, 미니멀)</span>
+    <button class="play-btn" data-file="send-02-blip.wav">▶ PLAY</button>
+  </div>
+  <div class="item">
+    <span class="label">03 &middot; TWO-STEP</span>
+    <span class="desc">sub 클릭 + 130ms 후 1.1kHz 확인 beep (의도적 confirm 느낌)</span>
+    <button class="play-btn" data-file="send-03-twostep.wav">▶ PLAY</button>
+  </div>
+  <div class="item">
+    <span class="label">04 &middot; BURST</span>
+    <span class="desc">4단 빠른 데이터 펄스 — 필터 노이즈 + 작은 사각파 (모스 부호 톤)</span>
+    <button class="play-btn" data-file="send-04-burst.wav">▶ PLAY</button>
+  </div>
+  <div class="item">
+    <span class="label">05 &middot; WARP</span>
+    <span class="desc">위로 솟는 whoosh — 노이즈/saw가 200Hz→1.5kHz 상승 + sub</span>
+    <button class="play-btn" data-file="send-05-warp.wav">▶ PLAY</button>
+  </div>
+  <div class="item">
+    <span class="label">06 &middot; MECH</span>
+    <span class="desc">기계식 키보드 키프레스 — 짧은 click transient + sub thunk (촉감)</span>
+    <button class="play-btn" data-file="send-06-mech.wav">▶ PLAY</button>
+  </div>
+  <div class="item">
+    <span class="label">07 &middot; STAB</span>
+    <span class="desc">신스 saw 화음 stab (A3-E4-A4 5도 + 디튠) + lowpass sweep</span>
+    <button class="play-btn" data-file="send-07-stab.wav">▶ PLAY</button>
+  </div>
+  <div class="item">
+    <span class="label">08 &middot; GLITCH</span>
+    <span class="desc">빠른 freq 점프 사각파 5단 + 모듈레이션 노이즈 (디지털 글리치)</span>
+    <button class="play-btn" data-file="send-08-glitch.wav">▶ PLAY</button>
+  </div>
+  <div class="item">
+    <span class="label">09 &middot; RADAR</span>
+    <span class="desc">소나/레이더 핑 — 단일 사인 880Hz + 매우 긴 잔향 (우주 공간감)</span>
+    <button class="play-btn" data-file="send-09-radar.wav">▶ PLAY</button>
+  </div>
+  <div class="item">
+    <span class="label">10 &middot; KICK</span>
+    <span class="desc">무거운 sub kick 130→35Hz + 크리스피 top click (드럼 임팩트)</span>
+    <button class="play-btn" data-file="send-10-kick.wav">▶ PLAY</button>
+  </div>
+</div>
+
+<div class="group">
+  <h2>RECEIVE <small>메시지 수신 시</small></h2>
+  <div class="item" data-file="receive-A-decrypt.wav">
+    <span class="label">A &middot; DECRYPT</span>
+    <span class="desc">디크립트 시퀀스 — 노이즈 sweep + sub thump + 락 클릭</span>
+    <button class="play-btn" data-file="receive-A-decrypt.wav">▶ PLAY</button>
+  </div>
+  <div class="item" data-file="receive-B-bell.wav">
+    <span class="label">B &middot; BELL</span>
+    <span class="desc">홀로그램 핑 — 크리스탈 종소리 (FM 부분음 합성) + 긴 잔향</span>
+    <button class="play-btn" data-file="receive-B-bell.wav">▶ PLAY</button>
+  </div>
+  <div class="item" data-file="receive-C-dualtone.wav">
+    <span class="label">C &middot; DUAL</span>
+    <span class="desc">사이파이 듀얼 톤 — G4→D5 두 음 연속 + sub backbone</span>
+    <button class="play-btn" data-file="receive-C-dualtone.wav">▶ PLAY</button>
+  </div>
+</div>
+
+<div class="group">
+  <h2>FANFARE <small>EP CLEAR (cu next ep)</small></h2>
+  <div class="item" data-file="fanfare-A-bwaaam.wav">
+    <span class="label">A &middot; BWAAAM</span>
+    <span class="desc">Inception 스타일 — sub riser → 노이즈 buildup → 디튠 saw 화음 임팩트</span>
+    <button class="play-btn" data-file="fanfare-A-bwaaam.wav">▶ PLAY</button>
+  </div>
+  <div class="item" data-file="fanfare-B-tron.wav">
+    <span class="label">B &middot; TRON</span>
+    <span class="desc">Tron 시스템 언락 — 상승 sweep + E major 종소리 화음 + 긴 잔향</span>
+    <button class="play-btn" data-file="fanfare-B-tron.wav">▶ PLAY</button>
+  </div>
+  <div class="item" data-file="fanfare-C-stab.wav">
+    <span class="label">C &middot; STAB</span>
+    <span class="desc">사이버펑크 영웅 — sub kick + saw stab × 3 + sustain pad 마무리</span>
+    <button class="play-btn" data-file="fanfare-C-stab.wav">▶ PLAY</button>
+  </div>
+</div>
+
+<div class="group">
+  <h2>REJECT <small>잘못된 코드</small></h2>
+  <div class="item" data-file="reject-A-dystopia.wav">
+    <span class="label">A &middot; DYSTOPIA</span>
+    <span class="desc">디스토피아 buzz — sub saw 하강 + 비팅 디튠 mid (불협음)</span>
+    <button class="play-btn" data-file="reject-A-dystopia.wav">▶ PLAY</button>
+  </div>
+  <div class="item" data-file="reject-B-glitch.wav">
+    <span class="label">B &middot; GLITCH</span>
+    <span class="desc">디지털 글리치 — 3 펄스 노이즈 + 마무리 sub DENIED 임팩트</span>
+    <button class="play-btn" data-file="reject-B-glitch.wav">▶ PLAY</button>
+  </div>
+  <div class="item" data-file="reject-C-twoton.wav">
+    <span class="label">C &middot; 2-TONE</span>
+    <span class="desc">고전 거부음 — high E5 짧게 → low E4 길게 + sub</span>
+    <button class="play-btn" data-file="reject-C-twoton.wav">▶ PLAY</button>
+  </div>
+</div>
+
+<div class="group">
+  <h2>ALARM <small>타이머 종료 (0초)</small></h2>
+  <div class="item" data-file="alarm-A-klaxon.wav">
+    <span class="label">A &middot; KLAXON</span>
+    <span class="desc">사이파이 클락슨 — saw pitch-bend swing × 3 + sub thump</span>
+    <button class="play-btn" data-file="alarm-A-klaxon.wav">▶ PLAY</button>
+  </div>
+  <div class="item" data-file="alarm-B-pulse.wav">
+    <span class="label">B &middot; PULSE</span>
+    <span class="desc">디지털 펄스 — high-low 교차 사각파 × 4</span>
+    <button class="play-btn" data-file="alarm-B-pulse.wav">▶ PLAY</button>
+  </div>
+  <div class="item" data-file="alarm-C-siren.wav">
+    <span class="label">C &middot; SIREN</span>
+    <span class="desc">디스토피아 사이렌 — 지속 saw가 LFO로 위아래 swing + sub kick</span>
+    <button class="play-btn" data-file="alarm-C-siren.wav">▶ PLAY</button>
+  </div>
+</div>
+
+<p class="footer">
+> SELECT &middot; TELL_ME_THE_LETTER &middot; (e.g. "send: B, receive: A, fanfare: A")
+</p>
+
+<script>
+  let volume = 0.7;
+  document.getElementById("vol").addEventListener("input", (e) => {
+    volume = parseFloat(e.target.value);
+    document.getElementById("volv").textContent = `${Math.round(volume * 100)}%`;
+  });
+  let currentAudio = null;
+  document.querySelectorAll(".play-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const file = btn.dataset.file;
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+      currentAudio = new Audio(file);
+      currentAudio.volume = volume;
+      currentAudio.play();
+    });
+  });
+</script>
+
+</body>
+</html>

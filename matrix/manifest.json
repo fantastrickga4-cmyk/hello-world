@@ -1,0 +1,20 @@
+{
+  "name": "SNAKE :: SECURE TERMINAL",
+  "short_name": "SNAKE",
+  "description": "EPISODE 01 // CLASSIFIED COMMS CHANNEL",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#00ff52",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

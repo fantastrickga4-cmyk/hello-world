@@ -143,3 +143,7 @@ vercel --prod --yes
 9. **불필요한 옛 프로젝트 정리**: `first/`(snake-terminal), `snake-2/`(snake-terminal-2) 로컬 폴더 + Vercel 프로젝트 삭제
 10. **태블릿 2 복제**: `snake-matrix-2/` 폴더로 복제, Redis 키 분리, 뷰어를 빨간 톤으로 변경, 별도 Vercel 프로젝트로 배포
 11. **상단 UI 재배치**: 우측 상단에 적층돼 있던 타이머/진행률을 분리 — 진행률은 우측 상단(데스크톱 170px / 모바일 110px), 타이머는 화면 가로 중앙(240px / 모바일 200px)에 배치. `.msg-header`에 `min-height: 116px`(모바일 96px) 추가하여 헤더 하단 가로줄이 중앙 타이머 박스 바닥에 정렬되도록 조정. 양쪽 태블릿 동일 적용.
+12. **힌트 PE012 추가**: 그동안 빠져 있던 `pe012` 항목 추가 (에덴거리 보안박스 마크 단서, 정답 `830`).
+13. **진행률 바 축소**: 우측 상단 `.progress-bar` 크기 다운 (데스크톱 170px → 140px, 폰트/패딩/간격 한 단계씩 축소). 중앙 타이머와의 시각적 균형 개선.
+14. **타이머 1분 좌우 흔들림 수정**: `.timer-bar.critical`의 `timer-blink` 키프레임이 `transform: scale(1.04)`만 지정해 중앙정렬용 `translateX(-50%)`를 덮어쓰던 문제. 키프레임 0%/50%/100%에 `translateX(-50%)`를 함께 명시해 중앙 고정 + scale pulse 동작.
+15. **TIME UP 상태 헤더 라인 정렬**: `.timer-bar.done`에서 `:: TIME UP` 텍스트가 추가되며 `.timer-text`가 줄바꿈되어 박스 높이가 커지고 헤더 가로줄이 박스 중앙을 가로지르던 문제. `.done`에 `width: auto; min-width: 240px`(모바일 200px) + `.timer-text { white-space: nowrap }` 적용 → 박스가 세로가 아닌 가로로만 확장돼 하단 y좌표 유지, 헤더 라인이 다시 박스 하단에 정렬.

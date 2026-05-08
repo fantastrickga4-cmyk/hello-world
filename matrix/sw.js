@@ -7,7 +7,7 @@
 //
 // 결과: 태블릿이 잠깐 와이파이에 연결되기만 하면 새 시나리오·이미지·코드가 자동으로 받아짐.
 
-const CACHE_NAME = "snake-matrix-v28";
+const CACHE_NAME = "snake-matrix-v31";
 const FILES = [
   "./",
   "./index.html",

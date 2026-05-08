@@ -754,9 +754,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 10px 14px;
-  width: 170px;
+  gap: 6px;
+  padding: 8px 12px;
+  width: 140px;
   background: rgba(0, 16, 8, 0.92);
   border: 1px solid var(--accent);
   font-family: inherit;
@@ -764,18 +764,18 @@ body {
 }
 .progress-bar.hidden { display: none !important; }
 .progress-bar .progress-icon {
-  font-size: 16px;
+  font-size: 14px;
   color: var(--accent);
   text-shadow: 0 0 6px var(--accent);
 }
 .progress-bar .progress-label {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--accent-dim);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   font-weight: 700;
 }
 .progress-bar .progress-text {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--accent);
@@ -805,7 +805,10 @@ body {
 .timer-bar.alert .timer-label { color: var(--error); text-shadow: 0 0 10px var(--error); }
 
 .timer-bar.critical { animation: timer-blink 0.6s steps(1) infinite; }
-@keyframes timer-blink { 50% { opacity: 0.5; transform: scale(1.04); } }
+@keyframes timer-blink {
+  0%, 100% { transform: translateX(-50%) scale(1); }
+  50%      { opacity: 0.5; transform: translateX(-50%) scale(1.04); }
+}
 
 .timer-bar.done {
   background: rgba(40, 0, 6, 0.92);
@@ -813,7 +816,11 @@ body {
   border-width: 2px;
   box-shadow: 0 4px 26px rgba(255, 42, 77, 0.7);
   animation: timer-end-pulse 0.9s ease-in-out infinite;
+  /* ":: TIME UP" 추가로 인한 줄바꿈 방지 — 가로로만 늘리고 높이는 유지 */
+  width: auto;
+  min-width: 240px;
 }
+.timer-bar.done .timer-text { white-space: nowrap; }
 .timer-bar.done .timer-text,
 .timer-bar.done .timer-label,
 .timer-bar.done .timer-icon { color: var(--error); text-shadow: 0 0 10px var(--error); }
@@ -1282,6 +1289,7 @@ body {
   .hint-btn { height: 48px; padding: 0 12px; font-size: 13px; }
   .msg-header { min-height: 96px; }
   .timer-bar { padding: 8px 14px; gap: 8px; left: 50%; right: auto; transform: translateX(-50%); top: 50px; width: 200px; }
+  .timer-bar.done { min-width: 200px; }
   .timer-bar .timer-text { font-size: 20px; }
   .timer-bar .timer-label { display: none; }
   /* 진행률은 우측 상단, 타이머는 중앙 아래 */

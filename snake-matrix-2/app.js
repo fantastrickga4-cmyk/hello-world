@@ -623,6 +623,7 @@ function playTimerEndAlarm() {
 
 // ============ 힌트 사용 횟수 ============
 const HINT_COUNT_KEY = "snake-hint-count-v1";
+const HINT_USED_KEY = "snake-hint-used-v1";
 function loadHintCount() {
   try {
     const n = parseInt(localStorage.getItem(HINT_COUNT_KEY), 10);
@@ -635,6 +636,7 @@ function saveHintCount(n) {
 }
 function clearHintCount() {
   try { localStorage.removeItem(HINT_COUNT_KEY); } catch {}
+  try { localStorage.removeItem(HINT_USED_KEY); } catch {}
   pushState();
 }
 function renderHintCount() {
@@ -646,18 +648,28 @@ function bumpHintCount() {
   saveHintCount(n);
   renderHintCount();
 }
+function loadUsedHints() {
+  try {
+    const arr = JSON.parse(localStorage.getItem(HINT_USED_KEY) || "[]");
+    return new Set(Array.isArray(arr) ? arr : []);
+  } catch { return new Set(); }
+}
+function markHintUsed(key) {
+  const s = loadUsedHints();
+  if (s.has(key)) return false;
+  s.add(key);
+  try { localStorage.setItem(HINT_USED_KEY, JSON.stringify([...s])); } catch {}
+  return true;
+}
 
 // ============ 힌트 팝업 ============
 function openHintModal() {
   const modal = document.getElementById("hint-modal");
-  document.getElementById("hint-form").reset();
-  document.getElementById("hint-result").classList.add("hidden");
-  resetHintAnswerToggle();
   renderHintCount();
   modal.classList.remove("hidden");
   setTimeout(() => {
     const inp = document.getElementById("hint-input");
-    if (inp) inp.focus();
+    if (inp) { inp.focus(); inp.select(); }
   }, 30);
 }
 function closeHintModal() {
@@ -694,7 +706,8 @@ document.getElementById("hint-form").addEventListener("submit", (e) => {
     text.textContent = hintText;
     text.classList.remove("hint-not-found");
     if (label) label.textContent = "> HINT";
-    bumpHintCount();
+    const usedKey = (raw || "").trim().toLowerCase();
+    if (markHintUsed(usedKey)) bumpHintCount();
     if (answerText) {
       const wrap = document.getElementById("hint-answer-wrap");
       const ans = document.getElementById("hint-answer-text");
@@ -881,6 +894,9 @@ function resetAll() {
   SnakeTimer.clear();
   clearProgress();
   clearHintCount();
+  const _hf = document.getElementById("hint-form"); if (_hf) _hf.reset();
+  const _hr = document.getElementById("hint-result"); if (_hr) _hr.classList.add("hidden");
+  resetHintAnswerToggle();
   hideEpClearOverlay();
   timerEndedFired = false;
   if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }

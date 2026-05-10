@@ -894,6 +894,15 @@ function resetAll() {
   SnakeTimer.clear();
   clearProgress();
   clearHintCount();
+  // 메모(낙서) 초기화 — 캔버스가 초기화돼 있으면 시각적으로도 비우기
+  try { localStorage.removeItem(MEMO_KEY); } catch {}
+  if (memoState && memoState.ctx && memoState.canvas) {
+    const _dpr = window.devicePixelRatio || 1;
+    const _w = memoState.canvas.width / _dpr;
+    const _h = memoState.canvas.height / _dpr;
+    memoState.ctx.fillStyle = "#02110a";
+    memoState.ctx.fillRect(0, 0, _w, _h);
+  }
   const _hf = document.getElementById("hint-form"); if (_hf) _hf.reset();
   const _hr = document.getElementById("hint-result"); if (_hr) _hr.classList.add("hidden");
   resetHintAnswerToggle();
